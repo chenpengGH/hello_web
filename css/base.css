@@ -24,6 +24,19 @@ nav {
     color: white;
     vertical-align: middle;
 }
+nav .content {
+    width: 1170px;
+    height: inherit;
+    margin: 0 auto;
+}
+nav .content::before {
+    content: " ";
+    display: table;
+}
+nav .content::after {
+    content: " ";
+    display: table;
+}
 .nav-left {
     float: left;
 }
@@ -58,7 +71,6 @@ nav {
 }
 .nav-ul.menu{
     display: flex;
-    margin-right: 40px;
     height: 40px;
     box-sizing: border-box;
     padding: 0 0;
