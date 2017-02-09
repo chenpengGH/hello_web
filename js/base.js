@@ -20,7 +20,10 @@ window.addEventListener("load", function () {
     // }
 
     top_a.onclick = function () {
-        window.scrollTo(0, 0);
+        $("html,body").animate({
+            scrollTop: 0
+        }, 100);
+        // window.scrollTo(0, 0);
         this.blur();
         return false;
     }
