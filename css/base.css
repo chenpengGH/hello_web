@@ -39,6 +39,7 @@ nav .content::after {
 }
 .nav-left {
     float: left;
+    height: inherit;
 }
 .nav-left:before {
     content: " ";
@@ -50,6 +51,7 @@ nav .content::after {
 }
 .nav-right {
     float: right;
+    height: inherit;
 }
 .nav-right:before {
     content: " ";
@@ -71,7 +73,7 @@ nav .content::after {
 }
 .nav-ul.menu{
     display: flex;
-    height: 40px;
+    height: inherit;
     box-sizing: border-box;
     padding: 0 0;
     justify-content: center;
