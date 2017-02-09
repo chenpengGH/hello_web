@@ -8,6 +8,9 @@ body, div, dl, dt, dd, ul, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset
     line-height: normal;
     font-weight: normal;
 }
+body {
+    min-width: 1170px;
+}
 a {
     color: inherit;
     text-decoration: none;
