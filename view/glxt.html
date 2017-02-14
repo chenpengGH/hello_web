@@ -120,7 +120,7 @@
         </div>
         <!―右侧管理控制台-->
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <iframe src="" id="mainFrame" frameborder="0" height="100%" width="100%" name="mainFrame" scrolling="no">
+            <iframe src="" id="mainFrame" frameborder="0" height="100%" width="100%" name="mainFrame" scrolling="auto">
 
             </iframe>
         </div>
@@ -134,16 +134,29 @@
 <script type="text/javascript">
     /* 加载iframe内容 */
     $("document").ready(function () {
-        requestMainFrame("/hello_web/view/frames/_article.html")
-//        requestMainFrame("/hello_web/view/frames/_console.html")
+//        var ref = requestMainFrame("/hello_web/view/frames/_article.html")
+        requestMainFrame("/hello_web/view/frames/_console.html")
 //        requestMainFrame("./frames/_console.html")
-    })
+
+    });
 
     const target = "mainFrame";
     const requestMainFrame = function (url) {
         if(url) {
-            window.open(url, target);
+            var ref = window.open(url, target);
+            return ref;
         }
+        return null;
+    }
+    
+    var callback = function () {
+//        取得这个html文档的高度   取得iframe里页面的高度
+        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        var contentHtml = $(window.frames["mainFrame"].document).find("html");
+        var contentHeight = contentHtml.css("height");
+
+        $("#mainFrame").css("min-height", clientHeight + "px");
+        $("#mainFrame").css("height", contentHeight);
     }
 </script>
 </body>

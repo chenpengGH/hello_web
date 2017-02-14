@@ -4,6 +4,7 @@ html, body {
     height: 100%;
 }
 .container-fluid {
+    /*min-height: 100%;*/
     height: 100%;
 }
 .row-container,
@@ -18,4 +19,5 @@ html, body {
 /* iframe的样式 */
 #mainFrame {
     overflow-y: auto;
+    display: block;
 }
