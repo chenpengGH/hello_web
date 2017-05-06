@@ -38,7 +38,7 @@
         font-size: 30px;
     }
     .progress {
-        /*margin-top: 300px;*/
+        margin-top: 300px;
     }
 </style>
 </head>
@@ -54,6 +54,7 @@
     </p>
 
 <script type="text/javascript" src="./js/jquery.min.2.1.1.js"></script>
+<script type="text/javascript" src="preload.js"></script>
 <script type="text/javascript">
     var imgs = [
         'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493977277041&di=36d520fd0858f041c088cb08a93d6d3f&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F91529822720e0cf33f2c2edb0946f21fbe09aa33.jpg'
@@ -68,13 +69,39 @@
         ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493977936784&di=bcfb4cca9cc5ed9c0c3b798b7249c1b3&imgtype=0&src=http%3A%2F%2Fh9.86.cc%2Fwalls%2F20160624%2F1366x768_7b75ce963f1ab40.jpg'
     ];
 
-    var index = 0, len = imgs.length,
-        count = 0, $progress = $('.progress');
+    var index = 0,
+        len = imgs.length,
+        $progress = $('.progress');
 
     // 图片预加载方法，遍历数组
-    $.each(imgs, function (i, src) {
+    $.preload(imgs, {
+        each: function (event, count, i, src) {
+            console.info('each.' + event.type + ':' + i + " src=" + src);
+            'error' === event.type && imgs.splice(i, 1);
+            $progress.html(Math.round(count / len * 100) + '%');
+        },
+        all: function () {
+            $('.loading').hide()
+            document.title = '1/' + len;
+            // 预加载完成
+            $('#img').attr('src', imgs[index]);
+            console.info('clear')
+        }
+    });
+
+    $('.btn').on('click', function () {
+        if ('prev' === $(this).data('control')) {
+            index = Math.max(0, --index)
+        } else {
+            index = Math.min(imgs.length - 1, ++index)
+        }
+        document.title = (index + 1) + '/' + len;
+        $('#img').attr('src', imgs[index]);
+    })
+
+    /*$.each(imgs, function (i, src) {
         var imgObj = new Image()
-        
+
         $(imgObj).on('load error', function (event) {
             'error' === event.type && imgs.splice(i, 1);
             count++;
@@ -88,25 +115,11 @@
             }
             console.info('each.' + event.type + ':' + i)
         })
-//        $(imgObj).on('error', function () {
-//            imgs.splice(i, 1)
-//            console.info('each.erro:' + i)
-//        })
 
         imgObj.src = src;
         console.info('each:' + i + ' src:' + src);
-    })
+    })*/
 
-
-    $('.btn').on('click', function () {
-        if ('prev' === $(this).data('control')) {
-            index = Math.max(0, --index)
-        } else {
-            index = Math.min(imgs.length - 1, ++index)
-        }
-        document.title = (index + 1) + '/' + len;
-        $('#img').attr('src', imgs[index]);
-    })
 </script>
 </div>
 </body>
