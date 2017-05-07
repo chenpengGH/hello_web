@@ -13,18 +13,22 @@
         this.imgs = (typeof imgs === 'string')? [imgs]: imgs;
         this.opts = $.extend({}, Preload.DEFAULTS, opts);
 
-        this._unoredered(); //  执行无序加载方法
+        if(this.opts.ordered === 'ordered') {
+            this._ordered();  //  有序预加载方法
+        } else {
+            this._unoredered(); //  执行无序加载方法
+        }
     }
     Preload.DEFAULTS = {
+        ordered: 'unoredered',  //  无序预加载
         each: null, //  数组中每张图片加载完成执行的函数
-        each_opts: null, //  执行each方法是传的参数
         all: null   //  数组中所有图片加载完成执行的函数
     };
     Preload.prototype._unoredered = function () {  //  无序加载
         var imgs = this.imgs,
             opts = this.opts,
             count = 0,
-            length = imgs.length;
+            len = imgs.length;
 
         $.each(imgs, function (i, src) {
             if (typeof src != 'string') return;  //  src若不是字符串，就直接返回
@@ -44,6 +48,33 @@
 
             imgObj.src = src;
         })
+    },
+    Preload.prototype._ordered = function () {  //  有序预加载
+        var imgs = this.imgs,
+            opts = this.opts,
+            count = 0,
+            len = imgs.length;
+
+        load();
+
+        function load() {
+            var imgObj = new Image();
+
+            $(imgObj).on('load error', function (event) {
+                count++;
+
+                opts.each && opts.each(event, count, imgObj.src);
+
+                if(count >= len) {
+                    //  全部加载完毕
+                    opts.all && opts.all();
+                } else {
+                    load();
+                }
+            })
+
+            imgObj.src = imgs[count];
+        }
     };
 
     //  变成jquery的插件
