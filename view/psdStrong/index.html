@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>实时检测密码强度带隐藏显示功能代码</title>
+<meta name="keywords" content="实时检测,密码强度,带隐藏显示功能,代码" />
+<meta name="description" content="实时检测密码强度带隐藏显示功能代码js特效代码下载。" /> 
+<meta name="author" content="js代码" />
+<meta name="copyright" content="js代码" />
+<script type="text/javascript" src="../static/js/protect.js"></script>
+<link type="text/css" rel="stylesheet" href="css/ionicons.min.css">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+<div class="password-wrapper">
+	<input id="password-field" type="password" class="input" name="password">
+	<div class="icon-wrapper">
+  	<span toggle="#password-field" class="ion ion-eye field-icon toggle-password"></span>
+  </div>
+  <div class="strength-lines">
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+  </div>
+</div>
+</body>
+<script>
+$(document).ready(function() {
+	//隐藏或显示密码
+	$(".icon-wrapper").click(function() {
+		$(".toggle-password").toggleClass(".ion-eye ion-more");
+		var input = $($(".toggle-password").attr("toggle"));
+		if (input.attr("type") == "password") {
+			input.attr("type", "text");
+		} else {
+			input.attr("type", "password");
+		}
+	});
+
+	//键盘事件
+	$("#password-field").on("keyup", function() {
+		var val = $(this).val(),
+			color = testPasswordStrength(val);
+		  styleStrengthLine(color, val);
+	});
+
+	//密码强度检测
+	function testPasswordStrength(value) {
+		var strongRegex = new RegExp(
+			"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[~!@#$%^&*_+])(?=.{13,})"
+		),
+			mediumRegex = new RegExp(
+				"^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})"
+			);
+
+		if (strongRegex.test(value)) {
+			return "green";
+		} else if (mediumRegex.test(value)) {
+			return "orange";
+		} else {
+			return "red";
+		}
+	}
+  //密码强度显示样式
+	function styleStrengthLine(color, value) {
+		$(".line")
+			.removeClass("bg-red bg-orange bg-green")
+			.addClass("bg-transparent");
+		
+		if (value) {
+			if (color === "red") {
+				$(".line:nth-child(1)")
+					.removeClass("bg-transparent")
+					.addClass("bg-red");
+			} else if (color === "orange") {
+				$(".line:not(:last-of-type)")
+					.removeClass("bg-transparent")
+					.addClass("bg-orange");
+			} else if (color === "green") {
+				$(".line")
+					.removeClass("bg-transparent")
+					.addClass("bg-green");
+			}
+		}
+	}
+});
+</script>
+</html>

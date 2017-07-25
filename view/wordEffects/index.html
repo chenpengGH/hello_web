@@ -1,0 +1,72 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>文章内容逐字逐句打字效果出现js特效代码</title>
+<meta name="keywords" content="文章内容,逐字逐句,打字效果出现,js特效代码" />
+<meta name="description" content="文章内容逐字逐句打字效果出现js特效代码下载。" /> 
+<meta name="author" content="js代码" />
+<meta name="copyright" content="js代码" />
+<script type="text/javascript" src="../static/js/protect.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/style.css">
+<script type="text/javascript" src="./js/jquery.min.js"></script>
+</head>
+
+<body>
+<div id="typeist">
+  <h1>长恨歌</h1>
+  <p>白居易</p>
+  <p> 汉皇重色思倾国， 御宇多年求不得。</p>
+  <p> 杨家有女初长成， 养在深闺人未识。</p>
+  <p> 天生丽质难自弃， 一朝选在君王侧。</p>
+  <p> 回眸一笑百媚生， 六宫粉黛无颜色。</p>
+  <p> 春寒赐浴华清池， 温泉水滑洗凝脂。</p>
+  <p> 侍儿扶起娇无力， 始是新承恩泽时。</p>
+  <p> 云鬓花颜金步摇， 芙蓉帐暖度春宵。</p>
+  <p> 春宵苦短日高起， 从此君王不早朝。</p>
+  <p> 承欢侍宴无闲暇， 春从春游夜专夜。</p>
+</div>
+</body>
+<script type="text/javascript">
+function typeEffect(element, speed) {
+	var text = $(element).text();
+	$(element).html('');
+	let i = 0;
+	var timer = setInterval(function() {
+		if (i < text.length) {
+			$(element).append(text.charAt(i));
+			++i;
+		} else {
+			clearInterval();
+		}
+	}, speed);
+}
+
+$( document ).ready(function() {
+  var speed = 72;
+  var sum = 0;
+  var delay = new Array();
+  $('#typeist').children().each(function(){
+    sum += ($(this).text().length-1) * speed + speed;
+    delay.push(sum);
+  });
+  var plen = delay.length;
+  typeEffect($('h1'), speed);
+  /* 方法一：使用let块作用域 */
+  for (let i = 2; i <= plen; ++i){
+    setTimeout(function(){
+      $('p:nth-child('+i+')').css('display', 'inline-block');
+      typeEffect($('p:nth-child('+i+')'), speed);
+    }, delay[i-2]);
+  }
+  /* 方法二：使用自执行函数提供闭包条件 
+  for (var i = 2; i <= plen; ++i){
+    (function(i){
+      setTimeout(function(){
+        $('p:nth-child('+i+')').css('display', 'inline-block');
+        typeEffect($('p:nth-child('+i+')'), speed);
+      }, delay[i-2]);
+    })(i);
+  }*/
+});
+</script>
+</html>
