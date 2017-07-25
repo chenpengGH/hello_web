@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>图片预加载</title>
+<style rel="stylesheet" type="text/css">
+    html, body {
+        min-height: 100%;
+    }
+    a {
+        text-decoration: none;
+    }
+    .box {
+        text-align: center;
+    }
+    .btn {
+        display: inline-block;
+        height:30px;
+        line-height: 30px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        padding: 0 10px;
+        margin-right: 50px;
+        color: #333;
+        border-radius: 4px;
+    }
+    .btn:hover {
+        background-color: #eee;
+    }
+    .loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #eee;
+        text-align: center;
+        font-size: 30px;
+    }
+    .progress {
+        margin-top: 300px;
+    }
+</style>
+</head>
+<body>
+<div class="loading">
+    <p class="progress">0%</p>
+</div>
+<div class="box">
+    <img width="1000" id="img">
+    <p>
+        <a href="javascript:;" class="btn" data-control="prev">上一页</a>
+        <a href="javascript:;" class="btn" data-control="next">下一页</a>
+    </p>
+
+<script type="text/javascript" src="./js/jquery.min.2.1.1.js"></script>
+<script type="text/javascript" src="preload.js"></script>
+<script type="text/javascript">
+    var imgs = [
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493977277041&di=36d520fd0858f041c088cb08a93d6d3f&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F91529822720e0cf33f2c2edb0946f21fbe09aa33.jpg'
+        ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493959741531&di=36463d5e1f79ec5e1f07076c333a0a26&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fe61190ef76c6a7efe791c0a1fbfaaf51f2de6685.jpg'
+        ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493959779277&di=356cef9f20b69db5e6b4a08202461369&imgtype=0&src=http%3A%2F%2Fwww.danji8.com%2Fuploadpic%2F201212%2F06%2F2012120611001143231354762811.jpg'
+        ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493959805388&di=7ee7c1959fea51fe25a056958e02de77&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fpic%2Fitem%2F2e00ae86c9177f3eb30f28f370cf3bc79e3d565a.jpg'
+//        ,'http://prelodimg.com/?s=1493959741531&di=36463d5e1f79ec.jpg'
+        ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493959836925&di=3cd4d0f45c456967e318f325df3c4c5b&imgtype=0&src=http%3A%2F%2Fg.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Ff31fbe096b63f6241d53c2868444ebf81a4ca32d.jpg'
+        ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1494556610&di=ad1a784f47d3c77092dd510e048198f8&imgtype=jpg&er=1&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Ff7246b600c338744fb90221d530fd9f9d72aa07d.jpg'
+        ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493961944816&di=405d303856101efb318e7d4bb3c6b4f2&imgtype=0&src=http%3A%2F%2Fd.5857.com%2Fdonm_160225%2F001.jpg'
+        ,'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1493977936784&di=bcfb4cca9cc5ed9c0c3b798b7249c1b3&imgtype=0&src=http%3A%2F%2Fh9.86.cc%2Fwalls%2F20160624%2F1366x768_7b75ce963f1ab40.jpg'
+    ];
+
+    var index = 0,
+        len = imgs.length,
+        $progress = $('.progress');
+
+    // 图片预加载方法，遍历数组
+    /*$.preload(imgs, {
+        each: function (event, count, i, src) {
+            console.info('each.' + event.type + ':' + i + " src=" + src);
+            'error' === event.type && imgs.splice(i, 1);
+            $progress.html(Math.round(count / len * 100) + '%');
+        },
+        all: function () {
+            $('.loading').hide()
+            document.title = '1/' + len;
+            // 预加载完成
+            $('#img').attr('src', imgs[index]);
+            console.info('clear')
+        }
+    });*/
+    //  有序预加载
+    $.preload(imgs, {
+        ordered: 'ordered',
+        each: function (event, count, src) {
+            console.info('each.' + event.type + ':' + count + " src=" + src);
+            'error' === event.type && imgs.splice(i, 1);
+            $progress.html(Math.round(count / len * 100) + '%');
+        },
+        all: function () {
+            $('.loading').hide()
+            document.title = '1/' + len;
+            // 预加载完成
+            $('#img').attr('src', imgs[index]);
+            console.info('clear')
+        }
+    });
+
+    $('.btn').on('click', function (e) {
+        if ('prev' === $(this).data('control')) {
+            index = Math.max(0, --index)
+        } else {
+            index = Math.min(imgs.length - 1, ++index)
+        }
+        document.title = (index + 1) + '/' + len;
+        $('#img').attr('src', imgs[index]);
+    });
+
+    /*$.each(imgs, function (i, src) {
+        var imgObj = new Image()
+
+        $(imgObj).on('load error', function (event) {
+            'error' === event.type && imgs.splice(i, 1);
+            count++;
+            $progress.html(Math.round(count / len * 100) + '%');
+            if (count >= len) {
+                $('.loading').hide()
+                document.title = '1/' + len;
+                // 预加载完成
+                $('#img').attr('src', imgs[index]);
+                console.info('clear')
+            }
+            console.info('each.' + event.type + ':' + i)
+        })
+
+        imgObj.src = src;
+        console.info('each:' + i + ' src:' + src);
+    })*/
+
+</script>
+</div>
+</body>
+</html>
